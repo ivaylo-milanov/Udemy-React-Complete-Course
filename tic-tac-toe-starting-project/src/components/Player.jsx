@@ -1,11 +1,16 @@
 import { useState } from "react";
+import PropTypes from 'prop-types';
 
-export default function Player({ initialName, symbol, isActive }) {
+export default function Player({ initialName, symbol, isActive, onChangeName }) {
   const [playerName, setPlayerName] = useState(initialName);
   const [isEditing, setIsEditing] = useState(false);
 
   function handleEditClick() {
     setIsEditing(editing => !editing);
+
+    if (isEditing) {
+      onChangeName(symbol, playerName);
+    }
   }
 
   const btnCaption = isEditing ? 'Save' : 'Edit';
@@ -24,4 +29,12 @@ export default function Player({ initialName, symbol, isActive }) {
       <button onClick={handleEditClick}>{btnCaption}</button>
     </li>
   );
+}
+
+
+Player.propTypes = {
+  initialName: PropTypes.string,
+  symbol: PropTypes.string,
+  isActive: PropTypes.bool,
+  onChangeName: PropTypes.func
 }
