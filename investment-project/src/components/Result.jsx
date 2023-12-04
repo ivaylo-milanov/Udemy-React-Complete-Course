@@ -1,9 +1,12 @@
-import { formatter } from "../util/investment";
+import { calculateInvestmentResults, formatter } from "../util/investment";
 
-export default function Result({ annualData }) {
-  function calculateTotalInterest(index) {
-    return annualData.slice(0, index + 1).reduce((total, cur) => total + cur.interest, 0);
-  }
+export default function Result({ input }) {
+  const annualData = calculateInvestmentResults(input);
+  
+  const initialInvestment =
+    annualData[0].valueEndOfYear -
+    annualData[0].interest -
+    annualData[0].annualInvestment;
 
   return (
     <table id="result">
@@ -15,8 +18,11 @@ export default function Result({ annualData }) {
         <th>Invested Capital</th>
       </thead>
       <tbody>
-        {annualData.map((investment, index) => {
-          const totalInterest = calculateTotalInterest(index);
+        {annualData.map(investment => {
+          const totalInterest =
+            investment.valueEndOfYear -
+            investment.annualInvestment * investment.year -
+            initialInvestment;
           const investedCapital = investment.valueEndOfYear - totalInterest;
 
           return (

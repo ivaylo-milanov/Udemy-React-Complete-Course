@@ -2,17 +2,18 @@ import { useState } from "react";
 import Header from "./components/Header.jsx";
 import Result from "./components/Result.jsx";
 import UserInput from "./components/UserInput.jsx";
-import { calculateInvestmentResults } from "./util/investment.js";
 
 const INITIAL_USER_DATA = {
   initialInvestment: 10000,
-  annualInvestment: 100,
-  expectedReturn: 1,
-  duration: 1
+  annualInvestment: 1200,
+  expectedReturn: 6,
+  duration: 10
 };
 
 function App() {
   const [userData, setUserData] = useState(INITIAL_USER_DATA);
+
+  const inputIsValid = userData.duration >= 1;
 
   function handleUserDataChange(event) {
     setUserData(prevUserData => {
@@ -22,16 +23,14 @@ function App() {
         [name]: Number(value)
       }
     });
-    console.log(userData);
   }
-
-  const annualData = calculateInvestmentResults(userData);
 
   return (
     <main>
       <Header />
       <UserInput onChange={handleUserDataChange} />
-      <Result annualData={annualData}/>
+      {!inputIsValid && <p className="center">Please enter a duration greater than zero.</p>}
+      {inputIsValid && <Result input={userData}/>}
     </main>
   );
 }
